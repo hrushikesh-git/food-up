@@ -18,12 +18,17 @@ router.post("/register", function(req, res){
 	let newUser = new User({username: req.body.username})
     User.register(newUser, req.body.password, function(err, user){
         if(err){
-			console.log(err)
-            return res.render("register")
-        }
+            console.log(err);
+            res.render("register");
+            
+        }else{
         passport.authenticate("local")(req, res, function(){
-            res.redirect("/FoodUp")
+            res.redirect("/FoodUp");
+            req.flash("success","Successfully Signed Up");
+            res.redirect("/FoodUp");
+        
         })
+    }
     })
 })
 
@@ -38,8 +43,9 @@ router.post("/login", passport.authenticate("local", {
 })
 
 router.get("/logout", function(req, res){
-    req.logout()
-    res.redirect("FoodUp")
+    req.logout();
+    req.flash("success","Successfully LoggedOut");
+    res.redirect("FoodUp");
 })
 
 function isLoggedIn(req, res, next){
